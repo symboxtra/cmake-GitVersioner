@@ -90,7 +90,7 @@ function (git_versioner_get_version RESULT_VAR)
     find_package (Git)
 
 
-    # Check that git works and that PROJECT_SOURCE_DIR is a git repository
+    # Check that git works and that CMAKE_SOURCE_DIR is a git repository
     execute_process (
         COMMAND ${GIT_EXECUTABLE} status
 
@@ -99,7 +99,7 @@ function (git_versioner_get_version RESULT_VAR)
         ERROR_VARIABLE PROCESS_ERROR
 
         OUTPUT_STRIP_TRAILING_WHITESPACE
-        WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
+        WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
     )
 
     if (PROCESS_RESULT EQUAL 69)
@@ -113,7 +113,7 @@ function (git_versioner_get_version RESULT_VAR)
         message (STATUS "Error Code:\t\t${PROCESS_RESULT}")
         message (STATUS "Standard Output:\t${PROCESS_OUTPUT}")
         message (STATUS "Error Output: \t${PROCESS_ERROR}")
-        message (FATAL_ERROR "${PROJECT_SOURCE_DIR} is not a git repository.")
+        message (FATAL_ERROR "${CMAKE_SOURCE_DIR} is not a git repository.")
     endif ()
 
     check_git_error("${PROCESS_RESULT}" "${PROCESS_OUTPUT}" "${PROCESS_ERROR}")
@@ -132,7 +132,7 @@ function (git_versioner_get_version RESULT_VAR)
         ERROR_VARIABLE PROCESS_ERROR
 
         OUTPUT_STRIP_TRAILING_WHITESPACE
-        WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
+        WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
     )
 
     check_git_error("${PROCESS_RESULT}" "${PROCESS_OUTPUT}" "${PROCESS_ERROR}")
@@ -156,7 +156,7 @@ function (git_versioner_get_version RESULT_VAR)
         ERROR_VARIABLE PROCESS_ERROR
 
         OUTPUT_STRIP_TRAILING_WHITESPACE
-        WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
+        WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
     )
 
     check_git_error("${PROCESS_RESULT}" "${PROCESS_OUTPUT}" "${PROCESS_ERROR}")
@@ -176,7 +176,7 @@ function (git_versioner_get_version RESULT_VAR)
         ERROR_VARIABLE PROCESS_ERROR
 
         OUTPUT_STRIP_TRAILING_WHITESPACE
-        WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
+        WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
     )
 
     check_git_error("${PROCESS_RESULT}" "${PROCESS_OUTPUT}" "${PROCESS_ERROR}")
@@ -200,7 +200,7 @@ function (git_versioner_get_version RESULT_VAR)
         ERROR_VARIABLE PROCESS_ERROR
 
         OUTPUT_STRIP_TRAILING_WHITESPACE
-        WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
+        WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
     )
 
     check_git_error("${PROCESS_RESULT}" "${PROCESS_OUTPUT}" "${PROCESS_ERROR}")
@@ -228,7 +228,7 @@ function (git_versioner_get_version RESULT_VAR)
         ERROR_VARIABLE PROCESS_ERROR
 
         OUTPUT_STRIP_TRAILING_WHITESPACE
-        WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
+        WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
     )
 
     # Try again with the remote tracking branch
@@ -241,7 +241,7 @@ function (git_versioner_get_version RESULT_VAR)
             ERROR_VARIABLE PROCESS_ERROR
 
             OUTPUT_STRIP_TRAILING_WHITESPACE
-            WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
+            WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
         )
     endif ()
 
@@ -270,7 +270,7 @@ function (git_versioner_get_version RESULT_VAR)
         ERROR_VARIABLE PROCESS_ERROR
 
         OUTPUT_STRIP_TRAILING_WHITESPACE
-        WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
+        WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
     )
 
     check_git_error("${PROCESS_RESULT}" "${PROCESS_OUTPUT}" "${PROCESS_ERROR}")
@@ -317,7 +317,7 @@ function (git_versioner_get_version RESULT_VAR)
         ERROR_VARIABLE PROCESS_ERROR
 
         OUTPUT_STRIP_TRAILING_WHITESPACE
-        WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
+        WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
     )
 
     check_git_error("${PROCESS_RESULT}" "${PROCESS_OUTPUT}" "${PROCESS_ERROR}")
@@ -345,7 +345,7 @@ function (git_versioner_get_version RESULT_VAR)
         ERROR_VARIABLE PROCESS_ERROR
 
         OUTPUT_STRIP_TRAILING_WHITESPACE
-        WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
+        WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
     )
 
     check_git_error("${PROCESS_RESULT}" "${PROCESS_OUTPUT}" "${PROCESS_ERROR}")
