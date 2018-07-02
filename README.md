@@ -28,7 +28,7 @@ This means that the revision count increases approximately every `8.67` hours.
 When you started your project half a year ago and you have `325` commits the revision is something around `825`.
 
 When working on a feature branch, this versioner adds a two char identifier of the branch name and the commit count since branching.
-When you are building and have uncommitted files, it adds the count of the uncommitted files and `-SNAPSHOT`
+When you are building and have uncommitted files, it adds the count of the uncommitted files and `-SNAPSHOT`.
 
 
 ## Understanding the Version
@@ -45,7 +45,7 @@ When you are building and have uncommitted files, it adds the count of the uncom
 1083-dm4
 ```
 
-`-dm4` : `4` commits since branching from revision `1083`. First two `[a-z]` chars of the SHA-1 encoded branch name.
+`-dm4` : `4` commits since branching from revision `1083`. First two `[a-z]` chars of the SHA-1 hashed branch name.
 Clients don't have to know about your information and typos in branch names.
 But you have to be able to distinguish between different builds of different branches.
 
@@ -62,13 +62,13 @@ Configure the plugin in your top level `CMakeLists.txt`.
 
 ```CMake
 
-// Top-level CMakeLists.txt where you can add configuration options common to all sub-projects/modules.
+# Top-level CMakeLists.txt where you can add configuration options common to all sub-projects/modules.
 
 cmake_minimum_required (VERSION 3.5)
 
 include (GitVersioner.cmake)
 
-// Optional: configure the versioner
+# Optional: configure the versioner
 set (GIT_VERSIONER_DEFAULT_BRANCH "develop")                                # Default: "master"
 set (GIT_VERSIONER_STABLE_BRANCHES "release" "next" "someOtherBranch")      # Default: []
 set (GIT_VERSIONER_YEAR_FACTOR 1200)                                        # Default: 1000
