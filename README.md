@@ -56,6 +56,19 @@ But you have to be able to distinguish between different builds of different bra
 
 `(6)-SNAPSHOT` : 6 uncommitted but changed files. Hopefully nothing a client will ever see. But you know that your version is a work in progress with some local changes.
 
+#### Build with CI service detected
+```
+123.21-CI-dm
+```
+
+`-CI-` : A CI service has been detected. 
+Since many CI services only shallow clone git repositories, the CI build number will be used instead of the git based components.
+Auto-detection will currently occur on ~20 different CI services.
+
+`123` : Build number retrieved from the CI environment.
+
+`21` : Optional job number retrieved from the CI environment. This is only applicable on some CI services.
+
 ## Usage
 
 Configure the plugin in your top level `CMakeLists.txt`.
@@ -74,6 +87,7 @@ set (GIT_VERSIONER_STABLE_BRANCHES "release" "next" "someOtherBranch")      # De
 set (GIT_VERSIONER_YEAR_FACTOR 1200)                                        # Default: 1000
 set (GIT_VERSIONER_SNAPSHOT_ENABLED true)                                   # Default: false
 set (GIT_VERSIONER_LOCAL_CHANGES_ENABLED true)                              # Default: false
+set (GIT_VERSIONER_AUTO_DETECT_CI false)                                    # Default: true; prevents issues with shallow clones
 
 git_versioner_get_version(VERSION_RESULT)
 
