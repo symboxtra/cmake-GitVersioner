@@ -25,8 +25,8 @@ endif ()
 if (NOT DEFINED GIT_VERSIONER_YEAR_FACTOR)
     set (GIT_VERSIONER_YEAR_FACTOR 1000)
 endif ()
-if (NOT DEFINED GIT_VERSIONER_SNAPSHOT_ENABLED)
-    set (GIT_VERSIONER_SNAPSHOT_ENABLED false)
+if (NOT DEFINED GIT_VERSIONER_DIRTY_ENABLED)
+    set (GIT_VERSIONER_DIRTY_ENABLED false)
 endif()
 if (NOT DEFINED GIT_VERSIONER_LOCAL_CHANGES_ENABLED)
     set (GIT_VERSIONER_LOCAL_CHANGES_ENABLED false)
@@ -70,29 +70,6 @@ function(lines_to_list LINES RESULT_VAR)
 
 endfunction()
 
-function(get_current_branch_name RESULT_VAR)
-
-    # Get current branch
-    execute_process (
-        COMMAND ${GIT_EXECUTABLE} symbolic-ref --short -q HEAD
-
-        RESULT_VARIABLE PROCESS_RESULT
-        OUTPUT_VARIABLE PROCESS_OUTPUT
-        ERROR_VARIABLE PROCESS_ERROR
-
-        OUTPUT_STRIP_TRAILING_WHITESPACE
-        WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-    )
-
-    check_git_error("${PROCESS_RESULT}" "${PROCESS_OUTPUT}" "${PROCESS_ERROR}")
-    set (${RESULT_VAR} ${PROCESS_OUTPUT} PARENT_SCOPE)
-
-    set (PROCESS_RESULT  1)
-    set (PROCESS_OUTPUT "")
-    set (PROCESS_ERROR "")
-
-endfunction()
-
 # Get the SHA1 hash of the branch name
 # Sadly, don't have access to base64 encoding
 function(get_tiny_branch_name ORIGINAL_NAME LENGTH RESULT_VAR)
@@ -127,13 +104,11 @@ function (git_versioner_get_version RESULT_VAR)
 
         if (CI_FOUND)
 
-            get_current_branch_name(CURRENT_BRANCH)
-
-            if ("${CURRENT_BRANCH}" STREQUAL "${GIT_VERSIONER_DEFAULT_BRANCH}")
-                set (FINAL_NAME "${CI_BUILD_NUMBER}-CI")
+            if ("${CI_BRANCH_NAME}" STREQUAL "${GIT_VERSIONER_DEFAULT_BRANCH}")
+                set (FINAL_NAME "${CI_BUILD_NUMBER}CI")
             else ()
-                get_tiny_branch_name("${CURRENT_BRANCH}" 2 SHORT_BRANCH)
-                set (FINAL_NAME "${CI_BUILD_NUMBER}-CI-${SHORT_BRANCH}")
+                get_tiny_branch_name("${CI_BRANCH_NAME}" 2 SHORT_BRANCH)
+                set (FINAL_NAME "${CI_BUILD_NUMBER}CI-${SHORT_BRANCH}")
             endif ()
 
         endif ()
@@ -141,7 +116,6 @@ function (git_versioner_get_version RESULT_VAR)
     endif ()
 
     if (NOT CI_FOUND)
-
         # Check that git works and that CMAKE_SOURCE_DIR is a git repository
         execute_process (
             COMMAND ${GIT_EXECUTABLE} status
@@ -176,7 +150,23 @@ function (git_versioner_get_version RESULT_VAR)
 
 
         # Get current branch
-        get_current_branch_name(CURRENT_BRANCH)
+        execute_process (
+            COMMAND ${GIT_EXECUTABLE} symbolic-ref --short -q HEAD
+
+            RESULT_VARIABLE PROCESS_RESULT
+            OUTPUT_VARIABLE PROCESS_OUTPUT
+            ERROR_VARIABLE PROCESS_ERROR
+
+            OUTPUT_STRIP_TRAILING_WHITESPACE
+            WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+        )
+
+        check_git_error("${PROCESS_RESULT}" "${PROCESS_OUTPUT}" "${PROCESS_ERROR}")
+        set (CURRENT_BRANCH ${PROCESS_OUTPUT})
+
+        set (PROCESS_RESULT  1)
+        set (PROCESS_OUTPUT "")
+        set (PROCESS_ERROR "")
 
         if (CURRENT_BRANCH IN_LIST GIT_VERSIONER_STABLE_BRANCHES)
             set (GIT_VERSIONER_DEFAULT_BRANCH ${CURRENT_BRANCH})
@@ -423,14 +413,14 @@ function (git_versioner_get_version RESULT_VAR)
 
         math (EXPR COMBINED_VERSION "${COMMIT_COUNT} + ${TIME}")
 
-        # Add (#)-SNAPSHOT if enabled
+        # Add (#)-dirty if enabled
         set (EXTRA_TAGS "")
         if (GIT_VERSIONER_LOCAL_CHANGES_ENABLED AND HAS_LOCAL_CHANGES)
             set (EXTRA_TAGS "${EXTRA_TAGS}(${LOCAL_CHANGE_COUNT})")
         endif ()
 
-        if (GIT_VERSIONER_SNAPSHOT_ENABLED AND HAS_LOCAL_CHANGES)
-            set (EXTRA_TAGS "${EXTRA_TAGS}-SNAPSHOT")
+        if (GIT_VERSIONER_DIRTY_ENABLED AND HAS_LOCAL_CHANGES)
+            set (EXTRA_TAGS "${EXTRA_TAGS}-dirty")
         endif ()
 
         # Check if we are on a stable/default branch

@@ -28,7 +28,7 @@ This means that the revision count increases approximately every `8.67` hours.
 When you started your project half a year ago and you have `325` commits the revision is something around `825`.
 
 When working on a feature branch, this versioner adds a two char identifier of the branch name and the commit count since branching.
-When you are building and have uncommitted files, it adds the count of the uncommitted files and `-SNAPSHOT`.
+When you are building and have uncommitted files, it adds the count of the uncommitted files and `-dirty`.
 
 
 ## Understanding the Version
@@ -51,17 +51,17 @@ But you have to be able to distinguish between different builds of different bra
 
 #### Build with local changes
 ```
-1083-dm4(6)-SNAPSHOT
+1083-dm4(6)-dirty
 ```
 
-`(6)-SNAPSHOT` : 6 uncommitted but changed files. Hopefully nothing a client will ever see. But you know that your version is a work in progress with some local changes.
+`(6)-dirty` : 6 uncommitted but changed files. Hopefully nothing a client will ever see. But you know that your version is a work in progress with some local changes.
 
 #### Build with CI service detected
 ```
-123.21-CI-dm
+123.21CI-dm
 ```
 
-`-CI-` : A CI service has been detected. 
+`CI` : A CI service has been detected. 
 Since many CI services only shallow clone git repositories, the CI build number will be used instead of the git based components.
 Auto-detection will currently occur on ~20 different CI services.
 
@@ -85,7 +85,7 @@ include (GitVersioner.cmake)
 set (GIT_VERSIONER_DEFAULT_BRANCH "develop")                                # Default: "master"
 set (GIT_VERSIONER_STABLE_BRANCHES "release" "next" "someOtherBranch")      # Default: []
 set (GIT_VERSIONER_YEAR_FACTOR 1200)                                        # Default: 1000
-set (GIT_VERSIONER_SNAPSHOT_ENABLED true)                                   # Default: false
+set (GIT_VERSIONER_DIRTY_ENABLED true)                                      # Default: false
 set (GIT_VERSIONER_LOCAL_CHANGES_ENABLED true)                              # Default: false
 set (GIT_VERSIONER_AUTO_DETECT_CI false)                                    # Default: true; prevents issues with shallow clones
 
