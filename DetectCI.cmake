@@ -145,4 +145,6 @@ function(detect_ci)
         message (STATUS "DetectCI: No CI service detected.")
     endif ()
 
+    message (STATUS "")
+
 endfunction ()

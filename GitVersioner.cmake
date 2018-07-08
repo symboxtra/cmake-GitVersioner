@@ -39,6 +39,9 @@ if (NOT DEFINED GIT_VERSIONER_SHORT_NAME)
     set (GIT_VERSIONER_SHORT_NAME "")
 endif ()
 
+# Use this path to include DetectCI.cmake
+set (PRESERVED_INCLUDE_PATH "${CMAKE_CURRENT_LIST_DIR}")
+
 function(check_git_error PROCESS_RESULT PROCESS_OUTPUT PROCESS_ERROR)
 
     if (PROCESS_RESULT GREATER 0)
@@ -119,7 +122,7 @@ function (git_versioner_get_version RESULT_VAR)
     # This prevents errors due to shallow clones
     if (GIT_VERSIONER_AUTO_DETECT_CI)
 
-        include(DetectCI.cmake)
+        include(${PRESERVED_INCLUDE_PATH}/DetectCI.cmake)
         detect_ci()
 
         if (CI_FOUND)
